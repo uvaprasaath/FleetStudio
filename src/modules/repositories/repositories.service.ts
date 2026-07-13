@@ -13,20 +13,20 @@ export interface Hunk {
   lines: HunkLine[];
 }
 
+export interface Signature {
+  name: string;
+  email: string;
+  date: string;
+  avatarUrl: string;
+}
+
 export interface SimplifiedCommit {
   oid: string;
-  message: string;
-  author: {
-    name: string;
-    date: string;
-    email: string;
-  };
-  committer: {
-    name: string;
-    date: string;
-    email: string;
-  };
+  subject: string;
+  body: string;
   parents: Array<{ oid: string }>;
+  author: Signature;
+  committer: Signature;
 }
 
 export interface DiffFile {
@@ -49,18 +49,26 @@ export class RepositoriesService {
   ): Promise<SimplifiedCommit[]> {
     const data = await this.githubDao.getCommitData(owner, repo, oid);
 
+    const rawMessage = data.commit?.message || '';
+    const lines = rawMessage.split('\n');
+    const subject = lines[0] || '';
+    const body = lines.slice(1).join('\n').trim();
+
     const simplified: SimplifiedCommit = {
       oid: data.sha,
-      message: data.commit?.message || '',
+      subject,
+      body,
       author: {
         name: data.commit?.author?.name || '',
-        date: data.commit?.author?.date || '',
         email: data.commit?.author?.email || '',
+        date: data.commit?.author?.date || '',
+        avatarUrl: data.author?.avatar_url || '',
       },
       committer: {
         name: data.commit?.committer?.name || '',
-        date: data.commit?.committer?.date || '',
         email: data.commit?.committer?.email || '',
+        date: data.commit?.committer?.date || '',
+        avatarUrl: data.committer?.avatar_url || '',
       },
       parents: (data.parents || []).map((p: any) => ({ oid: p.sha })),
     };

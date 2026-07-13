@@ -37,6 +37,12 @@ describe('Repositories Module Integration Tests', () => {
             date: '2012-03-06T23:06:50Z',
           },
         },
+        author: {
+          avatar_url: 'https://avatars.githubusercontent.com/u/583234?v=4',
+        },
+        committer: {
+          avatar_url: 'https://avatars.githubusercontent.com/u/583234?v=4',
+        },
         parents: [
           { sha: '553c2077f0edc3d5dc5d17262f6aa498e69d6f8e' },
           { sha: '762941318ee16e59dabbacb1b4049eec22f0d303' },
@@ -57,8 +63,10 @@ describe('Repositories Module Integration Tests', () => {
       
       const commit = res.body.body.data[0];
       expect(commit.oid).toBe(mockCommitData.sha);
-      expect(commit.message).toBe(mockCommitData.commit.message);
+      expect(commit.subject).toBe('Merge pull request #6 from Spaceghost/patch-1');
+      expect(commit.body).toBe('New line at end of file.');
       expect(commit.author.name).toBe(mockCommitData.commit.author.name);
+      expect(commit.author.avatarUrl).toBe(mockCommitData.author.avatar_url);
       expect(commit.parents).toHaveLength(2);
       expect(commit.parents[0].oid).toBe('553c2077f0edc3d5dc5d17262f6aa498e69d6f8e');
     });
