@@ -87,13 +87,13 @@ export class RepositoriesService {
     filepath?: string
   ): Promise<DiffFile[]> {
     const data = await this.githubDao.getCommitData(owner, repo, oid);
-    const rawFiles: any[] = data.files || [];
+    const rawFiles = data.files || [];
 
-    // Filter by filepath if provided
     let filesToProcess = rawFiles;
+
     if (filepath) {
       filesToProcess = rawFiles.filter(
-        (f) => f.filename.toLowerCase() === filepath.toLowerCase()
+        (f: any) => f.filename.toLowerCase() === filepath.toLowerCase()
       );
 
       if (filesToProcess.length === 0) {
@@ -104,13 +104,11 @@ export class RepositoriesService {
       }
     }
 
-    // Map files to DiffFile structure matching the enum and file constraints
-    return filesToProcess.map((file) => {
-      let changeKind: 'ADDED' | 'COPIED' | 'DELETED' | 'MODIFIED' | 'RENAMED' | 'TYPE_CHANGED' = 'MODIFIED';
-      let headFile: { path: string } | null = null;
-      let baseFile: { path: string } | null = null;
+    return filesToProcess.map((file: any) => {
+      let changeKind: DiffFile['changeKind'];
+      let headFile: DiffFile['headFile'];
+      let baseFile: DiffFile['baseFile'];
 
-      // Status values in Github Commit API: "added", "removed", "modified", "renamed", "copied", "changed"
       if (file.status === 'added') {
         changeKind = 'ADDED';
         headFile = { path: file.filename };
@@ -138,7 +136,7 @@ export class RepositoriesService {
         baseFile = { path: file.previous_filename || file.filename };
       }
 
-      const hunks = file.patch ? this.parseGitPatch(file.patch) : [];
+      const hunks = file.patch ? this.parseGitPatch(file.patch, file.filename) : [];
 
       return {
         changeKind,
@@ -152,9 +150,10 @@ export class RepositoriesService {
   /**
    * Logic to parse unified diff patches into structured hunks and lines.
    */
-  private parseGitPatch(patch: string): Hunk[] {
+  private parseGitPatch(patch: string, filename?: string): Hunk[] {
     if (!patch) return [];
 
+    const isJsonFile = filename && filename.endsWith('.json');
     const patchLines = patch.split('\n');
     const hunks: Hunk[] = [];
 
@@ -185,7 +184,11 @@ export class RepositoriesService {
       if (!currentHunk) continue;
 
       const prefix = line[0];
-      const content = line.slice(1);
+      let content = line.slice(1);
+
+      if (isJsonFile) {
+        content = this.parseJsonLine(content);
+      }
 
       switch (prefix) {
         case ' ':
@@ -223,5 +226,37 @@ export class RepositoriesService {
     }
 
     return hunks;
+  }
+
+  /**
+   * Parses standard JSON escape sequences back to their original state.
+   */
+  private parseJsonLine(content: string): string {
+    try {
+      // JSON.parse wrapper is the most robust way to decode all standard/nested JSON escapes
+      return JSON.parse('"' + content + '"');
+    } catch {
+      try {
+        // Fallback manual unescaping if wrapping and parsing fails
+        let unescaped = content.replace(/\\(.)/g, (match, char) => {
+          switch (char) {
+            case '"': return '"';
+            case '\\': return '\\';
+            case '/': return '/';
+            case 'b': return '\b';
+            case 'f': return '\f';
+            case 'n': return '\n';
+            case 'r': return '\r';
+            case 't': return '\t';
+            default: return match;
+          }
+        });
+        return unescaped.replace(/\\u([0-9a-fA-F]{4})/g, (_, hex) => {
+          return String.fromCharCode(parseInt(hex, 16));
+        });
+      } catch {
+        return content;
+      }
+    }
   }
 }

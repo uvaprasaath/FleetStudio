@@ -47,35 +47,47 @@ Implements a strict **Controller-Service-DAO** pattern:
 
 ```text
 fleetstudio/
-├── .env.example            # Environment variables configuration template
-├── .gitignore              # Git ignore file
-├── jest.config.js          # Jest configuration
-├── package.json            # NPM project configuration and scripts
-├── tsconfig.json           # TypeScript configuration
-├── postman_collection.json # Downloadable Postman collection
-└── src/
-    ├── index.ts            # Server entrypoint and middleware assembly
-    ├── config/
-    │   └── config.ts       # Dotenv configurations loader
-    ├── helpers/
-    │   ├── customresponse.ts # Standard success/error envelopes
-    │   ├── httpexception.ts # Custom HTTP exception class
-    │   └── responsecode.ts  # HTTP & Custom error codes mapping
-    ├── integrations/
-    │   └── github/
-    │       ├── github.api.ts # Directly calls GitHub API
-    │       └── github.dao.ts # Caching layer with 5-minute TTL Map
-    ├── middleware/
-    │   └── error.middleware.ts # Global error-handling middleware
-    └── modules/
-        ├── health/
-        │   ├── health.controller.ts # Uptime / server checks controller
-        │   └── health.routes.ts     # Health routes mapping
-        └── repositories/
-            ├── repositories.controller.ts # Route actions for commits & diffs
-            ├── repositories.service.ts    # Diff file mapping & patch parsing
-            ├── repositories.route.ts      # Routes definition
-            └── repositories.test.ts       # Jest/Supertest integration specs
+├── .gitignore              # Root git ignore file
+├── README.md               # Root project documentation
+├── Fleet Studio API.postman_collection.json # Root Postman backup collection
+├── frontend/               # React TypeScript Client
+│   ├── src/
+│   │   ├── App.tsx         # Core UI Layout and Hunk diff views
+│   │   ├── index.css       # CSS importing Tailwind CSS v4
+│   │   ├── main.tsx        # React client entry mount point
+│   │   └── services/
+│   │       └── api.ts      # Typed endpoint API fetch functions
+│   ├── package.json        # Client NPM config and scripts
+│   └── vite.config.ts      # Vite config utilizing Tailwind v4 plugin
+└── server/                 # Node/Express Backend
+    ├── src/
+    │   ├── index.ts        # Server entrypoint and middleware assembly
+    │   ├── config/
+    │   │   └── config.ts   # Dotenv configurations loader
+    │   ├── helpers/
+    │   │   ├── customresponse.ts # Standard success/error envelopes
+    │   │   ├── httpexception.ts # Custom HTTP exception class
+    │   │   └── responsecode.ts  # HTTP & Custom error codes mapping
+    │   ├── integrations/
+    │   │   └── github/
+    │   │       ├── github.api.ts # Directly calls GitHub API
+    │   │       └── github.dao.ts # Caching layer with 5-minute TTL Map
+    │   ├── middleware/
+    │   │   └── error.middleware.ts # Global error-handling middleware
+    │   └── modules/
+    │       ├── health/
+    │       │   ├── health.controller.ts # Uptime / server checks controller
+    │       │   └── health.routes.ts     # Health routes mapping
+    │       └── repositories/
+    │           ├── repositories.controller.ts # Route actions for commits & diffs
+    │           ├── repositories.service.ts    # Diff file mapping & patch parsing
+    │           ├── repositories.route.ts      # Routes definition
+    │           └── repositories.test.ts       # Jest/Supertest integration specs
+    ├── package.json        # Server configuration and scripts
+    ├── tsconfig.json       # TypeScript configuration
+    ├── jest.config.js      # Jest configuration
+    ├── postman_collection.json # Downloadable Postman collection
+    └── .env.example        # Environment variables configuration template
 ```
 
 ---
@@ -86,34 +98,42 @@ fleetstudio/
 - Node.js (v20 or higher)
 - NPM
 
-### Installation
-1. Install dependencies:
+### Backend Setup
+1. Install backend dependencies:
    ```bash
    npm install
    ```
 2. Configure environment:
-   Copy `.env.example` to `.env` and set your preferred port (default `5000`) 
+   Copy `.env.example` to `.env` and set your preferred port (default `5000`) and optional `GITHUB_TOKEN`:
    ```bash
    cp .env.example .env
    ```
+3. Start the Express API server:
+   ```bash
+   npm run dev
+   ```
 
-### Scripts
-- **Development**: Start the server in watch mode:
-  ```bash
-  npm run dev
-  ```
-- **Build**: Compile TypeScript code to the `dist/` directory:
-  ```bash
-  npm run build
-  ```
-- **Start**: Start the compiled production server:
-  ```bash
-  npm run start
-  ```
-- **Test**: Run the Jest test suite:
-  ```bash
-  npm run test
-  ```
+### Frontend Setup
+1. Move to the `frontend/` directory and install client dependencies:
+   ```bash
+   cd frontend
+   npm install
+   ```
+2. Start the Vite React client dev server:
+   ```bash
+   npm run dev
+   ```
+   The client application will run at `http://localhost:5173` (by default).
+
+### Backend Development Commands
+- **Development**: Start the API server in watch mode: `npm run dev`
+- **Build**: Compile TypeScript backend code: `npm run build`
+- **Start**: Start the compiled production server: `npm run start`
+- **Test**: Run the Jest test suite: `npm run test`
+
+### Frontend Development Commands
+- **Development**: Start Vite development dev server: `npm run dev`
+- **Build**: Build static production assets to `dist/`: `npm run build`
 
 ---
 
@@ -137,4 +157,4 @@ fleetstudio/
 
 ## 7. Resources
 
-- **Postman Collection**: Download the collection to test endpoints locally: [postman_collection.json](file:///d:/InterviewTasks/FleetStudio/postman_collection.json).
+- **Postman Collection**: Download the collection to test endpoints locally: [postman_collection.json](file:///d:/InterviewTasks/FleetStudio/server/postman_collection.json).

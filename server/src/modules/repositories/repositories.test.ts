@@ -153,5 +153,31 @@ describe('Repositories Module Integration Tests', () => {
       expect(res.body.header.code).toBe(404);
       expect(res.body.body.message).toBe('File path missing-file.txt not found in this commit');
     });
+
+    it('should parse escaped JSON hunk lines back to original state', async () => {
+      const mockCommitWithJson = {
+        sha: '7fd1a60b01f91b314f59955a4e4d4e80d8edf11d',
+        files: [
+          {
+            filename: 'package.json',
+            status: 'modified',
+            additions: 1,
+            deletions: 1,
+            changes: 2,
+            patch: '@@ -1,3 +1,3 @@\n {\n-  \\"name\\": \\"fleetstudio\\"\n+  \\"name\\": \\"fleetstudio-api\\"\n }',
+          },
+        ],
+      };
+
+      mockFetchCommit.mockResolvedValue(mockCommitWithJson);
+
+      const res = await request(app)
+        .get('/api/v1/repositories/octocat/Hello-World/commits/7fd1a60b01f91b314f59955a4e4d4e80d8edf11d/diff')
+        .expect(Responsecode.OK);
+
+      const hunks = res.body.body.data[0].hunks;
+      expect(hunks[0].lines[1].content).toBe('  "name": "fleetstudio"');
+      expect(hunks[0].lines[2].content).toBe('  "name": "fleetstudio-api"');
+    });
   });
 });
