@@ -1,0 +1,113 @@
+{
+  "info": {
+    "_postman_id": "76de486d-d99e-4a1a-82cb-a80411097883",
+    "name": "FleetStudio Git Commit API",
+    "description": "API collection for the Git commit details and diff endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/health",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "health"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Commit Details",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/v1/repositories/octocat/Hello-World/commits/7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "v1",
+            "repositories",
+            "octocat",
+            "Hello-World",
+            "commits",
+            "7fd1a60b01f91b314f59955a4e4d4e80d8edf11d"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Commit Diff (All files)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/v1/repositories/octocat/Hello-World/commits/7fd1a60b01f91b314f59955a4e4d4e80d8edf11d/diff",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "v1",
+            "repositories",
+            "octocat",
+            "Hello-World",
+            "commits",
+            "7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
+            "diff"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Commit Diff Filtered by Path",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/v1/repositories/octocat/Hello-World/commits/7fd1a60b01f91b314f59955a4e4d4e80d8edf11d/diff?path=README",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "v1",
+            "repositories",
+            "octocat",
+            "Hello-World",
+            "commits",
+            "7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
+            "diff"
+          ],
+          "query": [
+            {
+              "key": "path",
+              "value": "README"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
