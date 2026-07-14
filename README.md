@@ -114,8 +114,9 @@ cd FleetStudio
 ```
 
 ### Backend Setup
-1. Install backend dependencies:
+1. Move to the `server/` directory and install backend dependencies:
    ```bash
+   cd server
    npm install
    ```
 2. Configure environment:
