@@ -145,6 +145,9 @@ cd FleetStudio
 To view an example commit analysis and diff, navigate to:
 [http://localhost:5173/repositories/uvaprasaath/google-form-clone-project/commit/c05e09040cfb46a4f89a76aa5f4f941f30f8cad8](http://localhost:5173/repositories/uvaprasaath/google-form-clone-project/commit/c05e09040cfb46a4f89a76aa5f4f941f30f8cad8)
 
+Another Example :
+[http://localhost:5173/repositories/uvaprasaath/FleetStudio/commit/9ec01f4474ea5ace4300f36f3be5d5aa828d296f](http://localhost:5173/repositories/uvaprasaath/FleetStudio/commit/9ec01f4474ea5ace4300f36f3be5d5aa828d296f)
+
 ### Backend Development Commands
 - **Development**: Start the API server in watch mode: `npm run dev`
 - **Build**: Compile TypeScript backend code: `npm run build`
