@@ -52,13 +52,22 @@ fleetstudio/
 ├── Fleet Studio API.postman_collection.json # Root Postman backup collection
 ├── frontend/               # React TypeScript Client
 │   ├── src/
-│   │   ├── App.tsx         # Core UI Layout and Hunk diff views
-│   │   ├── index.css       # CSS importing Tailwind CSS v4
-│   │   ├── main.tsx        # React client entry mount point
-│   │   └── services/
-│   │       └── api.ts      # Typed endpoint API fetch functions
-│   ├── package.json        # Client NPM config and scripts
-│   └── vite.config.ts      # Vite config utilizing Tailwind v4 plugin
+│   │   ├── assets/         # Static assets (images, icons)
+│   │   ├── lib/
+│   │   │   └── constants/
+│   │   │       └── index.tsx # Configuration and constant mappings
+│   │   ├── pages/
+│   │   │   └── CommitPage/
+│   │   │       ├── commit.page.tsx        # Commit detail and diff container page
+│   │   │       └── commitpage.components.tsx # Shared UI components for diff and file list
+│   │   ├── services/
+│   │   │   └── api.ts      # API consumer and typed Axios/fetch instance
+│   │   ├── App.css         # Component specific baseline styles
+│   │   ├── App.tsx         # Main application wrapper and router definition
+│   │   ├── index.css       # Global styles importing Tailwind CSS v4
+│   │   └── main.tsx        # Client application entry point
+│   ├── package.json        # Client NPM packages and build scripts
+│   └── vite.config.ts      # Vite bundler configuration
 └── server/                 # Node/Express Backend
     ├── src/
     │   ├── index.ts        # Server entrypoint and middleware assembly
@@ -98,6 +107,12 @@ fleetstudio/
 - Node.js (v20 or higher)
 - NPM
 
+### Clone the Repository
+```bash
+git clone https://github.com/uvaprasaath/FleetStudio.git
+cd FleetStudio
+```
+
 ### Backend Setup
 1. Install backend dependencies:
    ```bash
@@ -124,6 +139,10 @@ fleetstudio/
    npm run dev
    ```
    The client application will run at `http://localhost:5173` (by default).
+
+### Example URL
+To view an example commit analysis and diff, navigate to:
+[http://localhost:5173/repositories/uvaprasaath/google-form-clone-project/commit/c05e09040cfb46a4f89a76aa5f4f941f30f8cad8](http://localhost:5173/repositories/uvaprasaath/google-form-clone-project/commit/c05e09040cfb46a4f89a76aa5f4f941f30f8cad8)
 
 ### Backend Development Commands
 - **Development**: Start the API server in watch mode: `npm run dev`
