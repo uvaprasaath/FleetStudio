@@ -78,12 +78,22 @@ describe('Repositories Module Integration Tests', () => {
       });
 
       const res = await request(app)
-        .get('/api/v1/repositories/octocat/Hello-World/commits/invalid-sha')
+        .get('/api/v1/repositories/octocat/Hello-World/commits/0000000000000000000000000000000000000000')
         .expect(404);
 
       expect(res.body.header.code).toBe(404);
       expect(res.body.body.status).toBe('error');
       expect(res.body.body.message).toBe('Commit not found');
+    });
+
+    it('should return 400 Bad Request if the oid is not a 40-character hexadecimal string', async () => {
+      const res = await request(app)
+        .get('/api/v1/repositories/octocat/Hello-World/commits/invalid-sha')
+        .expect(Responsecode.BAD_REQUEST);
+
+      expect(res.body.header.code).toBe(400);
+      expect(res.body.body.status).toBe('error');
+      expect(res.body.body.message).toContain('Invalid OID format');
     });
   });
 
@@ -178,6 +188,16 @@ describe('Repositories Module Integration Tests', () => {
       const hunks = res.body.body.data[0].hunks;
       expect(hunks[0].lines[1].content).toBe('  "name": "fleetstudio"');
       expect(hunks[0].lines[2].content).toBe('  "name": "fleetstudio-api"');
+    });
+
+    it('should return 400 Bad Request if the oid is not a 40-character hexadecimal string', async () => {
+      const res = await request(app)
+        .get('/api/v1/repositories/octocat/Hello-World/commits/invalid-sha/diff')
+        .expect(Responsecode.BAD_REQUEST);
+
+      expect(res.body.header.code).toBe(400);
+      expect(res.body.body.status).toBe('error');
+      expect(res.body.body.message).toContain('Invalid OID format');
     });
   });
 });
